@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        .list-group-item.active {
+            background-color: pink;
+            border-color: pink;
+        }
+        .card{
+            border: 1px solid white;
+            box-shadow: 2px 3px 1px rgba(0,0,0,.2);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <button class="btn btn-outline-primary" id="get">Get</button>
+            </div>
+            <div class="col-md-3">
+                <button class="btn btn-outline-primary" id="post">Post</button>
+            </div>
+            <div class="col-md-3">
+                <button class="btn btn-outline-primary" id="patch">Patch</button>
+            </div>
+            <div class="col-md-3">
+                <button class="btn btn-outline-primary" id="delete">Delete</button>
+            </div>
+        </div>
+    </div> -->
+    <div class="container-fluid py-3">
+        <h2>產品列表</h2>
+        <div class="row">
+            <div class="col-md-3">
+                <ul class="list-group">
+                    <li class="list-group-item active">全部</li>
+                    <li class="list-group-item">甜點類</li>
+                    <li class="list-group-item">鹹派類</li>
+                </ul>
+            </div>
+            <div class="col-md-9">
+                <div class="card-deck" id="cardDeck">
+                    <!-- <div class="card">
+                        <img src="..." class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">Card title</h5>
+                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
+                                additional content. This content is a little bit longer.</p>
+                        </div>
+                        <div class="card-footer">
+                            <small class="text-muted">Last updated 3 mins ago</small>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // document.querySelector('#get').addEventListener('click', getData);
+        // document.querySelector('#post').addEventListener('click',postData);
+        // document.querySelector('#patch').addEventListener('click',patchData);
+        // document.querySelector('#delete').addEventListener('click',deleteData);
+
+        var apiPath = 'https://course-ec-api.hexschool.io';
+        var uuid = '87c11b32-8e80-4b1b-aaaa-2c44664c537e';
+        var token = 'Cm6s7vq7bRQmiJnEOiZcd1JSZb2XU0p6pfPzeCk4u6LR0Fi6Qq0mKPIjE9MB';
+
+        // 需設置 api 的 headers
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+        var obj = {
+            data: [],
+            getData(){
+                const vm = this;
+                var api = `${apiPath}/api/${uuid}/admin/ec/products`;
+                axios.get(api)
+                    .then(function (res) {
+                        vm.data = res.data.data;
+                        console.log(vm.data);
+                        render();
+                    });
+            },
+        };
+        // 初始化
+        obj.getData();
+
+        // 渲染畫面
+        function render(){
+            console.log(obj.data);
+            var str = '';
+            obj.data.forEach(function(item){
+                // console.log(item);
+                str += `<div class="card">
+                        <img src="${item.imageUrl[0]}" class="card-img-top" alt="">
+                        <div class="card-body">
+                            <h5 class="card-title">${item.title}</h5>
+                            <p class="card-text">${item.content}</p>
+                        </div>
+                        <div class="card-footer text-right">
+                            <button class="btn btn-outline-primary">加入購物車</button>
+                        </div>
+                    </div>`;
+                document.querySelector('#cardDeck').innerHTML = str;
+            });
+        };
+
+        // function getData() {
+        //     console.log('get data');
+
+        //     var api = `${apiPath}/api/${uuid}/admin/ec/products`;
+
+        //     axios.get(api)
+        //         .then(function (res) {
+        //             console.log(res.data.data);
+        //         });
+        // };
+
+        // function postData() {
+        //     console.log('post data');
+
+        //     var api = `${apiPath}/api/${uuid}/admin/ec/product`;
+
+        //     var data = {
+        //         title: '繽紛甜筒',
+        //         category: '甜點類',
+        //         content: '好吃的甜點',
+        //         imageUrl: ['https://images.unsplash.com/photo-1501443762994-82bd5dace89a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80'],
+        //         description: '好吃的甜點',
+        //     };
+
+        //     axios.post(api, data)
+        //         .then(function (res) {
+        //             console.log(res);
+        //         });
+        // };
+
+        // function patchData() {
+        //     console.log('patch data');
+
+        //     var api = `${apiPath}/api/${uuid}/admin/ec/product/M1aaPjimCtkBAnhtYJfQIkFQk8VHDaxexd1JYgeuxySW7MaZhVel9gTeptiVJyN6`;
+
+        //     var data = {
+        //         title: '鮮豔馬卡龍',
+        //         category: '甜點類',
+        //         content: '好吃的甜點',
+        //         imageUrl: ['https://images.unsplash.com/photo-1542310503-ff8da9c02372?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80'],
+        //         description: '好吃的甜點',
+        //     }
+
+        //     axios.patch(api, data)
+        //         .then(function (res) {
+        //             console.log(res);
+
+        //         });
+        // };
+
+        // function deleteData() {
+        //     console.log('delete data');
+
+        //     var api = `${apiPath}/api/${uuid}/admin/ec/product/hz9hSEe5yqd8CUxuQtMsx0cJ4pSrxvGRGcUQccB9yxjHhEsjGfw4gjUrV6WqPXk1`;
+
+        //     axios.delete(api)
+        //         .then(function (res) {
+        //             console.log(res);
+        //         });
+        // };
+    </script>
+</body>
+
+</html>
